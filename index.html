@@ -1,48 +1,448 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Rating</title>
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" /> -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Kepuasan Masyarakat</title>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 
-  <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/w3-css/4.1.0/w3.css" integrity="sha512-Ef5r/bdKQ7JAmVBbTgivSgg3RM+SLRjwU0cAgySwTSv4+jYcVeDukMp+9lZGWT78T4vCUxgT3g+E8t7uabwRuw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <script src="https://cdn.jsdelivr.net/npm/axios@1.2.1/dist/axios.min.js"></script>
+      <style>
     .fa-star {
       color: #ffd700;
     }
-    .fa-star-o {
-      color: #ccc;
-    }
+
+    
   </style>
+
+<!--    
+
+
+        Nama    :'',
+        NomorHP :'',
+        Umur    :'',
+        jenisKelamin    :'',
+        pendidikanTerakhir  :'',
+        pekerjaanUtama  :'',
+        caraBayar   :'',
+        unitPelayanan   :'',
+
+ -->
+
+
 </head>
-<body>
-  <div id="app">
-    <h1>Aplikasi Rating</h1>
-    <span class="score">
-    <div v-for="(star, index) in stars" :key="index" class="score-wrap">
-      <span class="stars-active">
-      <i class="fa" :class="{'fa-star': rating >= index + 1, 'fa-star-o': rating < index + 1}" @click="rate(index + 1)"></i>
-    </span>
+<body class="w3-containter w3-padding">
+    <div x-data="{
+
+
+        Nama    :'',
+        NomorHP :'',
+        Umur    :'',
+        jenisKelamin    :'',
+        pendidikanTerakhir  :'',
+        pekerjaanUtama  :'',
+        caraBayar   :'',
+        unitPelayanan   :'',
+        nilaiRuang  :'',
+
+
+        U1  :'',
+        U2  :'',
+        U3  :'',
+        U4  :'',
+        U5  :'',
+        U6  :'',
+        U7  :'',
+        U8  :'',
+        U9  :'',
+        U10 :'',
+        loyality    :'',
+        saran   :'',
+        tau :'',
+
+
+        submitting: false,
+        maxRating: 5,
+        maxU:4,
+        rsrating:'',
+
+        jenisKelaminList:['Laki-laki','Perempuan'],
+        pendidikanTerakhirList:['SD','SLTP','SLTA','D1-D2-D3','S1','S2 keatas'],
+        pekerjaanUtamaList:['PNS/TNI/POLRI','Pegawai Swasta','Wiraswasta/Usahawan','Pelajar/Mahasiswa','Driver','Lainnya'],
+        caraBayarList:['BPJS','Asuransi Lain','Tanggungan Pribadi','Perusahaan','lainnya'],
+        loyalityList:['Ya','Tidak'],
+        
+        ruanganList:[],
+        
+         }",
+
+
+        x-init="
+        persepsiRs=(e)=>{ return { 1: '1 / 4 (Sangat Tidak Puas)', 2: '2 / 4 (Tidak Puas)', 3: '3 / 4 (Puas)', 4: '4 / 4 (Sangat Puas)' }[e];};
+
+        persepsiUnit=(e)=>{ return { 1: '1 / 5 (Sangat Tidak Puas)', 2: '2 / 5 (Tidak Puas)', 3: '3 / 5 (Puas)', 4: '4 / 5 (Sangat Puas)', 5: '5 / 5 (Sangat Puas Sekali)' }[e];};
+
+        axios.get('https://script.google.com/macros/s/AKfycby4fe2jxyW2EcVLaXkKFJTbpO3HvZMI0AjtOaC8ja6dhkdqgKFco86UHB73uMmHWFZB_g/exec?do=ambilruang')
+            .then(response => {
+              ruanganList = response.data;
+            })
+            .catch(error => {
+              console.error(error);
+            });
+
+          " >
+        
+
+        <div class="w3-center">
+            <img src="rssoerojo.jpg" width="180">
+        <h4 >Form Kepuasan Masyarakat</h4>
     </div>
-  </span>
-    <p>Nilai: {{ rating }}/5</p>
-  </div>
-  <script src="https://unpkg.com/vue@3"></script>
-  <script>
-    Vue.createApp({
-      data() {
-        return {
-          stars: Array(5).fill(0),
-          rating: 2
-        }
-      },
-      methods: {
-        rate(rating) {
-          this.rating = rating;
-        }
+        <form class="w3-form" @submit.prevent="kirimData">
+            <template x-if="rsrating == '' || rsrating == 'tidak'">
+                <div>
+            <template x-transition:enter.duration.700ms="slide-up" x-if = "(unitPelayanan.length < 3)">
+                        <div>
+                            <label for="Nama">Nama</label>
+                            <input class="w3-input w3-round w3-border" type="text" id="Nama" x-model="Nama">
+                        <br>
+                            <label for="NomorHP">Nomor HP</label>
+                            <input class="w3-input w3-round w3-border" type="tel" id="NomorHP" x-model="NomorHP">
+                        <br>
+                            <label for="Umur">Umur</label>
+                            <input class="w3-input w3-round w3-border" type="number" id="Umur" x-model="Umur">
+                        <br>
+                          <label>Jenis Kelamin</label>
+                            <select class="w3-input" x-model="jenisKelamin">
+                                <option value="" selected>Pilih salah satu</option>
+                                <template x-for="kelamin in jenisKelaminList">
+                                    <option :value="kelamin" x-text="kelamin"></option>
+                                </template>
+                            </select>
+                            <br>
+
+                          <label>Pendidikan Terakhir</label>
+                            <select class="w3-input" x-model="pendidikanTerakhir">
+                                <option value="" selected>Pilih salah satu</option>
+                                <template x-for="pendidikan in pendidikanTerakhirList">
+                                    <option :value="pendidikan" x-text="pendidikan"></option>
+                                </template>
+                            </select>
+                            <br>
+
+                          <label>Pekerjaan Utama</label>
+                            <select class="w3-input" x-model="pekerjaanUtama">
+                                <option value="" selected>Pilih salah satu</option>
+                                <template x-for="pekerjaan in pekerjaanUtamaList">
+                                    <option :value="pekerjaan" x-text="pekerjaan"></option>
+                                </template>
+                            </select>
+                            <br>
+
+                          <label>Cara Bayar</label>
+                            <select class="w3-input" x-model="caraBayar">
+                                <option value="" selected>Pilih salah satu</option>
+                                <template x-for="cara in caraBayarList">
+                                    <option :value="cara" x-text="cara"></option>
+                                </template>
+                            </select>
+                            <br>
+                        </div>
+                    </template>
+
+
+
+                        <template x-transition:enter.duration.700ms="slide-down" x-if="(caraBayar.length > 2 && pekerjaanUtama.length >2 && pendidikanTerakhir.length >1 && jenisKelamin.length >2  && NomorHP.length > 3 && Nama.length >2)">
+                            <div>
+                      <label>Kamu mau memberi rating unit/ ruangan apa?</label>
+                            <select class="w3-input" x-model="unitPelayanan">
+                                <option value="" selected>Pilih salah satu</option>
+                                <template x-for="ruang in ruanganList">
+                                    <option :value="ruang.listRuangan" x-text="ruang.listRuangan"></option>
+                                </template>
+                            </select>
+                            <br>
+                        </div>
+                    </template>
+         
+
+
+
+
+
+            <template x-transition:enter.duration.700ms="slide-down" x-if = "(unitPelayanan.length > 2)" >
+
+                        <div>
+                            <label for="nilaiRuang"><b>Hai <span x-text="`${Nama}`"></span></b><br>Berikan nilai/ rating kamu untuk ruangan pelayanan <span x-text="`${unitPelayanan}`"></span>?</label>
+                            <!-- <span x-text="`${rating}`"></span> -->
+                            <div class="rating w3-center w3-xxlarge">
+                                <template x-for="i in maxRating" :key="i">
+                                    <i :class="i <= nilaiRuang ? 'fas fa-star' : 'far fa-star'" @click="nilaiRuang = i"></i>
+                                </template>
+                            </div>
+                            <div class="w3-center" x-text="persepsiUnit(nilaiRuang)"></div>
+                            
+                            <label for="saran">Saran:</label>
+                            <textarea class="w3-input w3-round w3-border" id="saran" x-model="saran"></textarea>
+
+                            <template x-if = "nilaiRuang >= 1">
+                                <div>
+                                    <p class="w3-center w3-bold"><b>Terimakasih telah memberikan penilaian/ rating <span x-text="`${nilaiRuang} Bintang`"></span> untuk ruangan <span x-text="`${unitPelayanan}`"></span></label></b></p>
+
+                                    <p>Apakah kamu bersedia untuk melanjutkan dengan memberi penilaian tentang rumah sakit dengan beberapa parameter? jika <b>Ya</b> kita akan melanjutkan ke form selanjutnya, namun jika <b>Tidak</b> silahkan klik <b>Kirim</b></p>
+                                    <label><input class="w3-radio w3-padding" type="radio" name="rsrating" id="rsrating" x-model="rsrating" value="ya">  Ya lanjut ke penilaian RS</label><br>
+
+                                    <label><input class="w3-radio w3-padding" type="radio" name="rsrating" id="rsrating" x-model="rsrating" value="tidak">  Tidak kirim penilaian ini saja</label><br><br>
+                                    <template x-if="rsrating == 'tidak'" >
+                                     <button class="w3-button w3-blue w3-padding" x-bind:disabled="submitting" type="submit">
+                                           <span x-show="!submitting">Kirim</span>
+                                            <span x-show="submitting">
+                                            <i class="fas fa-spinner fa-spin"></i> Mengirim...
+                                            </span>
+                                     </button>
+                                    </template>
+                              </div>
+                        </template>
+                        <br>
+
+                </template>
+            </div>
+        </template>
+        <template  x-if="rsrating == 'ya'">
+            <div>
+                 <label><b>Baik <span x-text="`${Nama}`"></span></b><br>
+                 Mari kita lanjutkan untuk memberi penilaian tentang rumah sakit</label><br>
+            
+        <hr>
+        <label>1. Berikan nilai kepuasan kamu tentang persyaratan administrasi dalam mendapat pelayanan di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U1 ? 'fas fa-star' : 'far fa-star'" @click="U1 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U1)"></div>
+            <hr>
+        <label>2. Berikan nilai kepuasan kamu tentang kemudahan akses dalam mendapatkan pelayanan</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U2 ? 'fas fa-star' : 'far fa-star'" @click="U2 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U2)"></div>
+
+            <hr>
+        <label>3. Berikan nilai kepuasan kamu tentang kecepatan petugas dalam memberikan pelayanan di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U3 ? 'fas fa-star' : 'far fa-star'" @click="U3 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U3)"></div>
+
+            <hr>
+        <label>4. Berikan nilai kepuasan kamu tentang kewajaran biaya dalam mendapatkan pelayanan di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U4 ? 'fas fa-star' : 'far fa-star'" @click="U4 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U4)"></div>
+
+            <hr>
+        <label>5. Berikan nilai kepuasan kamu tentang kesesuaian informasi pelayanan antara yang dijelaskan oleh Petugas dengan yang diterima</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U5 ? 'fas fa-star' : 'far fa-star'" @click="U5 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U5)"></div>
+
+            <hr>
+        <label>6. Berikan nilai kepuasan kamu tentang kemampuan/keterampilan petugas dalam memberikan pelayanan</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U6 ? 'fas fa-star' : 'far fa-star'" @click="U6 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U6)"></div>
+
+            <hr>
+        <label>7. Berikan nilai kepuasan kamu tentang sikap petugas (sopan, ramah, tanggap, dll) dalam memberikan pelayanan di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U7 ? 'fas fa-star' : 'far fa-star'" @click="U7 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U7)"></div>
+
+            <hr>
+        <label>8. Berikan nilai kepuasan kamu tentang mekanisme/prosedur penanganan keluhan di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U8 ? 'fas fa-star' : 'far fa-star'" @click="U8 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U8)"></div>
+
+            <hr>
+
+        <label>9. Berikan nilai kepuasan kamu tentang kualitas sarana dan prasarana di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U9 ? 'fas fa-star' : 'far fa-star'" @click="U9 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U9)"></div>
+
+            <hr>
+        <label>10. Berikan nilai kepuasan kamu tentang layanan parkir di Soerojo Hospital</label>
+            <div class=" w3-center w3-xxlarge">
+                <template x-for="i in maxU" :key="i">
+                    <i :class="i <= U10 ? 'fas fa-star' : 'far fa-star'" @click="U10 = i"></i>
+                </template>
+            </div>
+                <div class="w3-center" x-text="persepsiRs(U10)"></div>
+
+            <hr>
+            <label>Darimana kamu tau tentang Soerojo Hospital</label>
+            <input type="text" name="tau" class="w3-input w3-round w3-border" id="tau" x-model="tau">
+            <hr>
+
+
+            <p>Apakah kamu bersedia merekomendasikan keluarga atau teman yang kamu kenal untuk mendapat layanan di Soerojo Hospital jika membutuhkan?</p>
+            <label><input class="w3-radio w3-padding" type="radio" name="loyality" id="loyality" x-model="loyality" value="ya">  Ya tentu saja</label><br>
+            <label><input class="w3-radio w3-padding" type="radio" name="loyality" id="loyality" x-model="loyality" value="tidak">  Tidak</label><br><br>
+
+        <label>Berikan saran untuk perbaikan Soerojo Hospital</label>
+            <textarea class="w3-input w3-round w3-border" id="saranrs" x-model="saran"></textarea>
+            <hr>
+
+
+           <template x-transition:enter.duration.700ms="slide-down" x-if="(U1 > 0 && U2 > 0 && U3 > 0 && U4 > 0 && U5 > 0 && U6 > 0 && U7 > 0 && U8 > 0&& U9 > 0&& U10 > 0 && loyality.length > 1)">
+         <button class="w3-button w3-blue w3-padding" x-bind:disabled="submitting" type="submit">
+               <span x-show="!submitting">Kirim</span>
+                <span x-show="submitting">
+                <i class="fas fa-spinner fa-spin"></i> Mengirim...
+                </span>
+         </button>
+
+          </template>
+        </div>
+        </template>
+
+      </form>
+
+
+<!-- 
+<br><br><br><br>
+        <br>
+        <div x-text="`nama: ${Nama}`"></div>
+        <div x-text="`hp: ${NomorHP}`"></div>
+        <div x-text="`umur: ${Umur}`"></div>
+        <div x-text="`jenisKelamin: ${jenisKelamin}`"></div>
+        <div x-text="`pendidikanTerakhir: ${pendidikanTerakhir}`"></div>
+        <div x-text="`pekerjaanUtama: ${pekerjaanUtama}`"></div>
+        <div x-text="`caraBayar: ${caraBayar}`"></div>
+        <div x-text="`unitPelayanan: ${unitPelayanan}`"></div>
+        <div x-text="`nilaiRuang: ${nilaiRuang} Bintang`"></div>
+        <div x-text="`U1: ${U1}`"></div>
+        <div x-text="`U2: ${U2}`"></div>
+        <div x-text="`U3: ${U3}`"></div>
+        <div x-text="`U4: ${U4}`"></div>
+        <div x-text="`U5: ${U5}`"></div>
+        <div x-text="`U6: ${U6}`"></div>
+        <div x-text="`U7: ${U7}`"></div>
+        <div x-text="`U8: ${U8}`"></div>
+        <div x-text="`U9: ${U9}`"></div>
+        <div x-text="`U10: ${U10}`"></div>
+        <div x-text="`loyality: ${loyality}`"></div>
+        <div x-text="`Saran: ${saran}`"></div>
+        <div x-text="`Tau: ${tau}`"></div>
+ -->
+<!-- 
+<script type="text/javascript">
+    function kirimData() {
+          this.submitting = true;
       }
-    }).mount('#app');
-  </script>
+
+
+</script> -->
+
+
+
+<script type="text/javascript">
+
+        function kirimData() {
+          this.submitting = true;
+          axios.get('https://script.google.com/macros/s/AKfycby4fe2jxyW2EcVLaXkKFJTbpO3HvZMI0AjtOaC8ja6dhkdqgKFco86UHB73uMmHWFZB_g/exec',{
+                  params:{
+                    do:'post',           
+                    Nama: encodeURIComponent(this.Nama),
+                    NomorHP: encodeURIComponent(this.NomorHP),
+                    Umur: encodeURIComponent(this.Umur),
+                    jenisKelamin: encodeURIComponent(this.jenisKelamin),
+                    pendidikanTerakhir: encodeURIComponent(this.pendidikanTerakhir),
+                    pekerjaanUtama: encodeURIComponent(this.pekerjaanUtama),
+                    caraBayar: encodeURIComponent(this.caraBayar),
+                    unitPelayanan: encodeURIComponent(this.unitPelayanan),
+                    nilaiRuang: encodeURIComponent(this.nilaiRuang),
+                    U1: encodeURIComponent(this.U1),
+                    U2: encodeURIComponent(this.U2),
+                    U3: encodeURIComponent(this.U3),
+                    U4: encodeURIComponent(this.U4),
+                    U5: encodeURIComponent(this.U5),
+                    U6: encodeURIComponent(this.U6),
+                    U7: encodeURIComponent(this.U7),
+                    U8: encodeURIComponent(this.U8),
+                    U9: encodeURIComponent(this.U9),
+                    U10: encodeURIComponent(this.U10),
+                    loyality: encodeURIComponent(this.loyality),
+                    saran: encodeURIComponent(this.saran),
+                    tau: encodeURIComponent(this.tau)
+                   }
+              })
+                .then(response => {
+                    console.log(response.data);
+                    alert('Terimakasih telah berkontribusi untuk kemajuan Soerojo Hospital, senang menjadi bagian dari pengalaman pelayanan kesehatan Anda');
+                    // Reset form setelah data dikirim
+                        this.rsrating='';
+                        this.submitting=false;
+                        this.Nama='';
+                        this.NomorHP='';
+                        this.Umur='';
+                        this.jenisKelamin='';
+                        this.pendidikanTerakhir='';
+                        this.pekerjaanUtama='';
+                        this.caraBayar='';
+                        this.unitPelayanan='';
+                        this.nilaiRuang=0;
+                        this.U1 =0;
+                        this.U2 =0;
+                        this.U3 =0;
+                        this.U4 =0;
+                        this.U5 =0;
+                        this.U6 =0;
+                        this.U7 =0;
+                        this.U8 =0;
+                        this.U9 =0;
+                        this.U10=0;
+                        this.loyality='';
+                        this.saran ='';
+                        this.tau ='';
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Gagal mengirim data!');
+                });
+        }
+</script>
+
+
+
+    </div><br><br><br><br><br><br><br><br><br>
+<footer class="w3-center">Soerojo Hospital 2025</footer>
 </body>
 </html>
+
