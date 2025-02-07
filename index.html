@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/w3-css/4.1.0/w3.css" integrity="sha512-Ef5r/bdKQ7JAmVBbTgivSgg3RM+SLRjwU0cAgySwTSv4+jYcVeDukMp+9lZGWT78T4vCUxgT3g+E8t7uabwRuw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
       <script src="https://cdn.jsdelivr.net/npm/axios@1.2.1/dist/axios.min.js"></script>
-      <style>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  
+    <style>
     .fa-star {
       color: #ffd700;
     }
@@ -405,7 +406,7 @@
               })
                 .then(response => {
                     console.log(response.data);
-                    alert('Terimakasih telah berkontribusi untuk kemajuan Soerojo Hospital, senang menjadi bagian dari pengalaman pelayanan kesehatan Anda');
+                    showAlert('Terimakasih','Kamu telah berkontribusi untuk kemajuan Soerojo Hospital, senang menjadi bagian dari pengalaman pelayanan kesehatan Anda');
                     // Reset form setelah data dikirim
                         this.rsrating='';
                         this.submitting=false;
@@ -434,9 +435,19 @@
                 })
                 .catch(error => {
                     console.error(error);
-                    alert('Gagal mengirim data!');
+                    showAlert('Warning','Maaf data gagal dikirim coba ulangi lagi!');
                 });
         }
+
+    function showAlert(tt,isi) {
+    Swal.fire({
+      title: tt,
+      text: isi,
+      icon: '',
+      confirmButtonText: 'OK'
+    })
+    }
+    
 </script>
 
 
