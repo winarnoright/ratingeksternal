@@ -19,35 +19,22 @@
     
   </style>
 
-<!--    
-
-
-        Nama    :'',
-        NomorHP :'',
-        Umur    :'',
-        jenisKelamin    :'',
-        pendidikanTerakhir  :'',
-        pekerjaanUtama  :'',
-        caraBayar   :'',
-        unitPelayanan   :'',
-
- -->
-
 
 </head>
 <body class="w3-containter w3-padding">
     <div x-data="{
 
 
-        Nama    :'',
-        NomorHP :'',
-        Umur    :'',
-        jenisKelamin    :'',
-        pendidikanTerakhir  :'',
-        pekerjaanUtama  :'',
-        caraBayar   :'',
-        unitPelayanan   :'',
+        Nama    :'Win',
+        NomorHP :'09999',
+        Umur    :'43',
+        jenisKelamin    :'Laki-laki',
+        pendidikanTerakhir  :'SD',
+        pekerjaanUtama  :'Pegawai Swasta',
+        caraBayar   :'BPJS',
+        unitPelayanan   :'Lily 4 - Rawat Inap',
         nilaiRuang  :'',
+        next :false,
 
 
         U1  :'',
@@ -59,7 +46,7 @@
         U7  :'',
         U8  :'',
         U9  :'',
-        U10 :'',
+        U10  :'',
         loyality    :'',
         saran   :'',
         tau :'',
@@ -104,67 +91,84 @@
         <form class="w3-form" @submit.prevent="kirimData">
             <template x-if="rsrating == '' || rsrating == 'tidak'">
                 <div>
-            <template x-transition:enter.duration.700ms="slide-up" x-if = "(unitPelayanan.length < 3)">
+            <template x-if = "next == false">
                         <div>
+                            <label><b>Isi identitas kamu sebagai pemberi rating</b></label><br>
                             <label for="Nama">Nama</label>
                             <input class="w3-input w3-round w3-border" type="text" id="Nama" x-model="Nama">
+                            <span x-show="Nama.trim().length < 3" style="color: red; font-size: 10px;">Nama harus diisi minimal 3 karakter!</span>
+
                         <br>
-                            <label for="NomorHP">Nomor HP</label>
-                            <input class="w3-input w3-round w3-border" type="tel" id="NomorHP" x-model="NomorHP">
+                            <label :class="Nama.trim().length < 3 ? 'w3-text-grey' : ''" for="NomorHP">Nomor HP</label>
+                            <input :class="Nama.trim().length < 3 ? 'w3-light-grey' : ''" class="w3-input w3-round w3-border" type="tel" id="NomorHP" :disabled="Nama.trim().length < 3" x-model="NomorHP">
+                            <span x-show="Nama.trim().length >= 3 && NomorHP.trim().length < 4" style="color: red; font-size: 10px;">Isi nomor HP untuk lanjut!</span>
+
+                            <br>
+                            <label :class="NomorHP.trim().length < 4 ? 'w3-text-grey' : ''" for="Umur">Umur</label>
+                            <input :class="NomorHP.trim().length < 4 ? 'w3-light-grey' : ''" class="w3-input w3-round w3-border" type="number" id="Umur" :disabled="NomorHP.trim().length < 3" x-model="Umur">
+                            <span x-show="Umur.trim().length < 1 && NomorHP.trim().length >= 4" style="color: red; font-size: 10px;">Isi Usia untuk lanjut!</span>
+
                         <br>
-                            <label for="Umur">Umur</label>
-                            <input class="w3-input w3-round w3-border" type="number" id="Umur" x-model="Umur">
-                        <br>
-                          <label>Jenis Kelamin</label>
-                            <select class="w3-input" x-model="jenisKelamin">
+                          <label :class="Umur.trim().length < 1 ? 'w3-text-grey' : ''" >Jenis Kelamin</label>
+                            <select :class="Umur.trim().length < 1 ? 'w3-text-red' : ''" class="w3-input" x-model="jenisKelamin">
                                 <option value="" selected>Pilih salah satu</option>
                                 <template x-for="kelamin in jenisKelaminList">
-                                    <option :value="kelamin" x-text="kelamin"></option>
+                                    <option :disabled="Umur.trim().length < 1" :value="kelamin" x-text="kelamin" :selected="kelamin === jenisKelamin"></option>
                                 </template>
                             </select>
+                            <span x-show="jenisKelamin.trim().length < 1 && Umur.trim().length >= 1" style="color: red; font-size: 10px;">Pilih Jenis Kelamin!</span>
+
                             <br>
 
-                          <label>Pendidikan Terakhir</label>
-                            <select class="w3-input" x-model="pendidikanTerakhir">
+                          <label :class="jenisKelamin.trim().length < 1 ? 'w3-text-grey' : ''">Pendidikan Terakhir</label>
+                            <select :class="jenisKelamin.trim().length < 1 ? 'w3-text-red' : ''" class="w3-input" x-model="pendidikanTerakhir">
                                 <option value="" selected>Pilih salah satu</option>
                                 <template x-for="pendidikan in pendidikanTerakhirList">
-                                    <option :value="pendidikan" x-text="pendidikan"></option>
+                                    <option :disabled="jenisKelamin.trim().length < 1" :value="pendidikan" x-text="pendidikan" :selected="pendidikan === pendidikanTerakhir"></option>
                                 </template>
                             </select>
+                            <span x-show="pendidikanTerakhir.trim().length < 1 && jenisKelamin.trim().length >= 1" style="color: red; font-size: 10px;">Pilih pendidikan terakhir kamu!</span>
+
                             <br>
 
-                          <label>Pekerjaan Utama</label>
-                            <select class="w3-input" x-model="pekerjaanUtama">
+                          <label :class="pendidikanTerakhir.trim().length < 2 ? 'w3-text-grey' : ''">Pekerjaan Utama</label>
+                            <select :class="pendidikanTerakhir.trim().length < 2 ? 'w3-text-red' : ''" class="w3-input" x-model="pekerjaanUtama">
                                 <option value="" selected>Pilih salah satu</option>
                                 <template x-for="pekerjaan in pekerjaanUtamaList">
-                                    <option :value="pekerjaan" x-text="pekerjaan"></option>
+                                    <option :disabled="pendidikanTerakhir.trim().length < 2" :value="pekerjaan" x-text="pekerjaan" :selected="pekerjaan === pekerjaanUtama"></option>
                                 </template>
                             </select>
+                            <span x-show="pekerjaanUtama.trim().length < 1 && pendidikanTerakhir.trim().length >= 1" style="color: red; font-size: 10px;">Pilih pekerjaan kamu!</span>
                             <br>
 
-                          <label>Cara Bayar</label>
-                            <select class="w3-input" x-model="caraBayar">
+                          <label :class="pekerjaanUtama.trim().length < 2 ? 'w3-text-grey' : ''">Cara Bayar</label>
+                            <select :class="pekerjaanUtama.trim().length < 2 ? 'w3-text-red' : ''" class="w3-input" x-model="caraBayar">
                                 <option value="" selected>Pilih salah satu</option>
                                 <template x-for="cara in caraBayarList">
-                                    <option :value="cara" x-text="cara"></option>
+                                    <option :disabled="pekerjaanUtama.trim().length < 2" :value="cara" x-text="cara" :selected="cara === caraBayar"></option>
                                 </template>
                             </select>
+                            <span x-show="caraBayar.trim().length < 1 && pekerjaanUtama.trim().length >= 1" style="color: red; font-size: 10px;">Pilih cara bayar kamu!</span>
                             <br>
-                        </div>
-                    </template>
 
-
-
-                        <template x-transition:enter.duration.700ms="slide-down" x-if="(caraBayar.length > 2 && pekerjaanUtama.length >2 && pendidikanTerakhir.length >1 && jenisKelamin.length >2  && NomorHP.length > 3 && Nama.length >2)">
-                            <div>
-                      <label>Kamu mau memberi rating unit/ ruangan apa?</label>
-                            <select class="w3-input" x-model="unitPelayanan">
+                       <hr>
+                      <label><b>Dimanakah kamu mendapatkan pelayanan?</b></label><br>
+                      <label :class="caraBayar.trim().length < 2 ? 'w3-text-grey' : ''">Pilih ruangan</label>
+                            <select :class="caraBayar.trim().length < 2 ? 'w3-text-red' : ''" class="w3-input" x-model="unitPelayanan">
                                 <option value="" selected>Pilih salah satu</option>
                                 <template x-for="ruang in ruanganList">
-                                    <option :value="ruang.listRuangan" x-text="ruang.listRuangan"></option>
+                                    <option :disabled="caraBayar.trim().length < 2" :value="ruang.listRuangan" x-text="ruang.listRuangan" :selected="ruang.listRuangan === unitPelayanan"></option>
                                 </template>
                             </select>
+                            <span x-show="unitPelayanan.trim().length < 1 && caraBayar.trim().length >= 1" style="color: red; font-size: 10px;">Pilih ruangan tempat kamu mendapat pelayanan di Soerojo Hospital!</span>
                             <br>
+                            <button class="w3-button w3-blue w3-padding" @click="next = true" type="button" :disabled="unitPelayanan.trim().length < 1">
+                                <span x-show="!next">Selanjutnya</span>
+                                <span x-show="next">
+                            <i class="fas fa-spinner fa-spin"></i> Tunggu...
+                            </span>
+                        </button>
+
                         </div>
                     </template>
          
@@ -173,10 +177,10 @@
 
 
 
-            <template x-transition:enter.duration.700ms="slide-down" x-if = "(unitPelayanan.length > 2)" >
+            <template x-transition:enter.duration.700ms="slide-down" x-if = "next == true" >
 
                         <div>
-                            <label for="nilaiRuang"><b>Hai <span x-text="`${Nama}`"></span></b><br>Berikan nilai/ rating kamu untuk ruangan pelayanan <span x-text="`${unitPelayanan}`"></span>?</label>
+                            <label for="nilaiRuang"><b>Hai <span x-text="`${Nama}`"></span></b><br>Berikan nilai/ rating kamu untuk ruangan pelayanan <span x-text="`${unitPelayanan}`"></span>?<sup>*</sup></label>
                             <!-- <span x-text="`${rating}`"></span> -->
                             <div class="rating w3-center w3-xxlarge">
                                 <template x-for="i in maxRating" :key="i">
@@ -186,27 +190,46 @@
                             <div class="w3-center" x-text="persepsiUnit(nilaiRuang)"></div>
                             
                             <label for="saran">Saran:</label>
-                            <textarea class="w3-input w3-round w3-border" id="saran" x-model="saran"></textarea>
+                            <textarea class="w3-input w3-round w3-border" id="saran" x-model="saran"></textarea><br>
 
                             <template x-if = "nilaiRuang >= 1">
                                 <div>
                                     <p class="w3-center w3-bold"><b>Terimakasih telah memberikan penilaian/ rating <span x-text="`${nilaiRuang} Bintang`"></span> untuk ruangan <span x-text="`${unitPelayanan}`"></span></label></b></p>
 
+                                    <p>Apakah kamu bersedia merekomendasikan keluarga atau teman yang kamu kenal untuk mendapat layanan di Soerojo Hospital jika membutuhkan?<sup>*</sup></p>
+                                    <label><input class="w3-radio w3-padding" type="radio" name="loyality" id="loyality" x-model="loyality" value="ya">  Ya tentu saja</label><br>
+                                    <label><input class="w3-radio w3-padding" type="radio" name="loyality" id="loyality" x-model="loyality" value="tidak">  Tidak</label><br><br>
+
+                                    <label>Darimana kamu tau tentang Soerojo Hospital</label>
+                                    <input type="text" name="tau" class="w3-input w3-round w3-border" id="tau" x-model="tau">
+
                                     <p>Apakah kamu bersedia untuk melanjutkan dengan memberi penilaian tentang rumah sakit dengan beberapa parameter? jika <b>Ya</b> kita akan melanjutkan ke form selanjutnya, namun jika <b>Tidak</b> silahkan klik <b>Kirim</b></p>
                                     <label><input class="w3-radio w3-padding" type="radio" name="rsrating" id="rsrating" x-model="rsrating" value="ya">  Ya lanjut ke penilaian RS</label><br>
 
                                     <label><input class="w3-radio w3-padding" type="radio" name="rsrating" id="rsrating" x-model="rsrating" value="tidak">  Tidak kirim penilaian ini saja</label><br><br>
-                                    <template x-if="rsrating == 'tidak'" >
-                                     <button class="w3-button w3-blue w3-padding" x-bind:disabled="submitting" type="submit">
+                                    <span class="w3-text-red" style="font-size: 10px;" x-show="loyality.trim().length < 1 ">Lengkapi dulu pernyataan bertanda bintang baru klik kirim!</span><br>
+
+                                     <button class="w3-button w3-blue w3-padding" x-bind:disabled="submitting" type="submit" :disabled="rsrating != 'tidak'">
                                            <span x-show="!submitting">Kirim</span>
                                             <span x-show="submitting">
                                             <i class="fas fa-spinner fa-spin"></i> Mengirim...
                                             </span>
                                      </button>
-                                    </template>
+                                    <button x-show="!submitting" class="w3-button w3-blue w3-padding" @click="nilaiRuang ='',saran = '',loyality='',rsrating='',tau=''" type="button">
+                                        <span>Reset</span>
+                                    </button>
+
                               </div>
                         </template>
                         <br>
+
+                            <template x-if="rsrating == '' && nilaiRuang < 1">
+                                <div>
+                                <button class="w3-button w3-blue w3-padding" @click="next = false, nilaiRuang ='',saran = '',loyality=''" type="button">
+                                    <span>Kembali</span>
+                                </button>
+                                </div>
+                            </template>
 
                 </template>
             </div>
@@ -298,7 +321,7 @@
                 <div class="w3-center" x-text="persepsiRs(U9)"></div>
 
             <hr>
-        <label>10. Berikan nilai kepuasan kamu tentang layanan parkir di Soerojo Hospital</label>
+        <!-- <label>10. Berikan nilai kepuasan kamu tentang layanan parkir di Soerojo Hospital</label>
             <div class=" w3-center w3-xxlarge">
                 <template x-for="i in maxU" :key="i">
                     <i :class="i <= U10 ? 'fas fa-star' : 'far fa-star'" @click="U10 = i"></i>
@@ -306,30 +329,28 @@
             </div>
                 <div class="w3-center" x-text="persepsiRs(U10)"></div>
 
-            <hr>
-            <label>Darimana kamu tau tentang Soerojo Hospital</label>
-            <input type="text" name="tau" class="w3-input w3-round w3-border" id="tau" x-model="tau">
-            <hr>
+            <hr> -->
 
-
-            <p>Apakah kamu bersedia merekomendasikan keluarga atau teman yang kamu kenal untuk mendapat layanan di Soerojo Hospital jika membutuhkan?</p>
-            <label><input class="w3-radio w3-padding" type="radio" name="loyality" id="loyality" x-model="loyality" value="ya">  Ya tentu saja</label><br>
-            <label><input class="w3-radio w3-padding" type="radio" name="loyality" id="loyality" x-model="loyality" value="tidak">  Tidak</label><br><br>
 
         <label>Berikan saran untuk perbaikan Soerojo Hospital</label>
             <textarea class="w3-input w3-round w3-border" id="saranrs" x-model="saran"></textarea>
             <hr>
 
 
-           <template x-transition:enter.duration.700ms="slide-down" x-if="(U1 > 0 && U2 > 0 && U3 > 0 && U4 > 0 && U5 > 0 && U6 > 0 && U7 > 0 && U8 > 0&& U9 > 0&& U10 > 0 && loyality.length > 1)">
-         <button class="w3-button w3-blue w3-padding" x-bind:disabled="submitting" type="submit">
+           <!-- <template x-transition:enter.duration.700ms="slide-down" x-if="(U1 > 0 && U2 > 0 && U3 > 0 && U4 > 0 && U5 > 0 && U6 > 0 && U7 > 0 && U8 > 0&& U9 > 0&& U10 > 0 && loyality.length > 1)"> -->
+            <span class="w3-text-red" style="font-size: 10px;" x-show="(U1 * U2 * U3 * U4 * U5 * U6 * U7 * U8 *U9 < 1)">Lengkapi dulu semua penilaian baru klik kirim!</span><br>
+            <button x-show="!submitting" class="w3-button w3-blue w3-padding" @click="rsrating = '',U1 = '',U2 = '',U3 = '',U4 = '',U5 = '',U6 = '',U7 = '',U8 = '',U9 = ''" type="button">
+                <span>Kembali</span>
+            </button>
+
+            <button class="w3-button w3-blue w3-padding" x-bind:disabled="submitting" type="submit" :disabled="(U1 * U2 * U3 * U4 * U5 * U6 * U7 * U8 *U9 < 1)">
                <span x-show="!submitting">Kirim</span>
                 <span x-show="submitting">
                 <i class="fas fa-spinner fa-spin"></i> Mengirim...
                 </span>
          </button>
 
-          </template>
+          <!-- </template> -->
         </div>
         </template>
 
@@ -428,10 +449,11 @@
                         this.U7 =0;
                         this.U8 =0;
                         this.U9 =0;
-                        this.U10=0;
+                        // this.U10=0;
                         this.loyality='';
                         this.saran ='';
                         this.tau ='';
+                        this.next =false;
                 })
                 .catch(error => {
                     console.error(error);
