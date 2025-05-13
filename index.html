@@ -53,6 +53,7 @@
 
 
         submitting: false,
+        unit_geting: 0,
         maxRating: 5,
         maxU:4,
         rsrating:'',
@@ -75,10 +76,12 @@
 
         axios.get('https://script.google.com/macros/s/AKfycby4fe2jxyW2EcVLaXkKFJTbpO3HvZMI0AjtOaC8ja6dhkdqgKFco86UHB73uMmHWFZB_g/exec?do=ambilruang')
             .then(response => {
-              ruanganList = response.data;
+                unit_geting = 1
+                ruanganList = response.data;
             })
             .catch(error => {
-              console.error(error);
+                unit_geting = 2
+                console.error(error);
             });
 
           " >
@@ -153,9 +156,19 @@
 
                        <hr>
                       <label><b>Dimanakah kamu mendapatkan pelayanan?</b></label><br>
-                      <label :class="caraBayar.trim().length < 2 ? 'w3-text-grey' : ''">Pilih ruangan</label>
-                            <select :class="caraBayar.trim().length < 2 ? 'w3-text-red' : ''" class="w3-input" x-model="unitPelayanan">
-                                <option value="" selected>Pilih salah satu</option>
+                      <label :class="caraBayar.trim().length < 2 ? 'w3-text-grey' : ''">Pilih ruangan
+                            <span x-show="unit_geting==0">
+                            <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </span>
+                            <span x-show="unit_geting==2">
+                            <i class="fas fa-spinner fa-spin"></i> Masalah jaringan silahkan refress ulang...
+                            </span>
+
+                        </label>
+                      <select :class="caraBayar.trim().length < 2 ? 'w3-text-red' : ''" class="w3-input" x-model="unitPelayanan">
+                                <option value="" selected>
+                                    <span>Pilih salah satu</span>
+                                </option>
                                 <template x-for="ruang in ruanganList">
                                     <option :disabled="caraBayar.trim().length < 2" :value="ruang.listRuangan" x-text="ruang.listRuangan" :selected="ruang.listRuangan === unitPelayanan"></option>
                                 </template>
